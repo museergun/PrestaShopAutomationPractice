@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -44,7 +45,7 @@ public class PrestaShopPositive {
 
   @Test
   public void positive() throws InterruptedException {
-    for (int i = 0; i < 6; i++) {
+   // for (int i = 0; i < 6; i++) {
       Faker f1 = new Faker();
       String email = f1.name().username();
       String firstName = f1.name().firstName();
@@ -101,14 +102,27 @@ public class PrestaShopPositive {
       driver.findElement(By.name("alias")).sendKeys("Home Adress");
       driver.findElement(By.id("submitAccount")).click();
 
-      new WebDriverWait(driver, 10)
-          .until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class='logout']")));
+      new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class='logout']")));
 
       driver.findElement(By.xpath("//a[@class='logout']")).click();
       
+      
+      Thread.sleep(3000);
+      driver.findElement(By.xpath("//input[@id='email']")).sendKeys(email+"@gmail.com");
+      driver.findElement(By.xpath("//input[@id='passwd']")).sendKeys(pass);
+      driver.findElement(By.xpath("//button[@id='SubmitLogin']")).click();
+      String actual =driver.findElement(By.xpath("(//a/span)[1]")).getText();
+      Assert.assertTrue(actual.contains(firstName+" "+lastName));
+      
+      
+//      new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(By.id("email")));
+//      driver.findElement(By.id("email")).sendKeys(email+"@gmail.com");
+//      driver.findElement(By.id("passwd")).sendKeys(pass+Keys.ENTER);
+//      String test = driver.findElement(By.xpath("//a/span")).getText();
+//      Assert.assertTrue(test.contains(firstName+" "+lastName));
 
-    }
-    driver.close();
+  //  }
+    //driver.close();
 
   }
 }
